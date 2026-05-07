@@ -1102,7 +1102,10 @@
             <div class="settings-item-label" id="settingsUser">-</div>
             <div class="settings-item-sub" id="settingsRole">-</div>
           </div>
-          <button class="btn-sm btn-danger" onclick="doLogout()">登出</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sm" onclick="showChangePwModal()">改密碼</button>
+            <button class="btn-sm btn-danger" onclick="doLogout()">登出</button>
+          </div>
         </div>
       </div>
       <div class="settings-section" id="adminSection" style="display:none">
@@ -1220,6 +1223,20 @@
       <div class="form-row"><label>皮帶</label><input type="number" id="newIntBelt" value="1000" min="1"></div>
     </div>
     <button class="btn-submit" onclick="addGenerator()">新增</button>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-overlay" id="changePwModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>修改密碼</span>
+      <button class="modal-close" onclick="closeModal('changePwModal')">✕</button>
+    </div>
+    <div class="form-row"><label>目前密碼</label><input type="password" id="oldPw" placeholder="輸入目前密碼"></div>
+    <div class="form-row"><label>新密碼</label><input type="password" id="newPw" placeholder="輸入新密碼"></div>
+    <div class="form-row"><label>確認新密碼</label><input type="password" id="newPw2" placeholder="再輸入一次新密碼"></div>
+    <button class="btn-submit" onclick="changePassword()">✓ 確認修改</button>
   </div>
 </div>
 
@@ -1934,7 +1951,30 @@ function renderUserList() {
   `).join('');
 }
 
-function showAddUserModal() { document.getElementById('addUserModal').classList.add('open'); }
+function showChangePwModal() {
+  document.getElementById('oldPw').value = '';
+  document.getElementById('newPw').value = '';
+  document.getElementById('newPw2').value = '';
+  document.getElementById('changePwModal').classList.add('open');
+}
+
+function changePassword() {
+  const oldPw = document.getElementById('oldPw').value;
+  const newPw = document.getElementById('newPw').value;
+  const newPw2 = document.getElementById('newPw2').value;
+  if (!oldPw || !newPw || !newPw2) { toast('請填寫所有欄位'); return; }
+  if (oldPw !== currentUser.password) { toast('目前密碼錯誤'); return; }
+  if (newPw !== newPw2) { toast('兩次新密碼不一致'); return; }
+  if (newPw.length < 4) { toast('新密碼至少 4 個字元'); return; }
+  const acct = DB.accounts.find(a => a.username === currentUser.username);
+  acct.password = newPw;
+  currentUser.password = newPw;
+  save();
+  closeModal('changePwModal');
+  toast('✓ 密碼已修改');
+}
+
+
 
 function addUser() {
   const u = document.getElementById('newUsername').value.trim();
