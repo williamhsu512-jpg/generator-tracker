@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>發電機管理系統</title>
+<title>盈鑫發電機管理系統</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
 
@@ -799,14 +799,128 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* OFFLINE BANNER */
+  #offlineBanner {
+    display: none;
+    background: rgba(239,68,68,.15);
+    border-bottom: 1px solid rgba(239,68,68,.3);
+    color: var(--danger);
+    font-size: 12px;
+    text-align: center;
+    padding: 6px;
+    position: sticky;
+    top: 56px;
+    z-index: 99;
+  }
+  #offlineBanner.show { display: block; }
+
+  /* TODO SECTION */
+  .todo-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .todo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    cursor: pointer;
+    background: rgba(245,158,11,.06);
+    border-bottom: 1px solid var(--border);
+  }
+  .todo-header h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .todo-count {
+    font-size: 12px;
+    background: var(--danger);
+    color: #fff;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+  .todo-toggle { font-size: 12px; color: var(--text3); }
+  .todo-list { padding: 8px; }
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .todo-item:hover { background: var(--bg3); }
+  .todo-item:last-child { margin-bottom: 0; }
+  .todo-priority {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .todo-priority.p1 { background: rgba(239,68,68,.2); color: var(--danger); }
+  .todo-priority.p2 { background: rgba(249,115,22,.2); color: var(--warn); }
+  .todo-priority.p3 { background: rgba(59,130,246,.15); color: var(--accent2); }
+  .todo-info { flex: 1; min-width: 0; }
+  .todo-gen { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--accent); }
+  .todo-parts { font-size: 12px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .todo-loc { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .todo-badge {
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .todo-badge.danger { background: rgba(239,68,68,.15); color: var(--danger); }
+  .todo-badge.warn { background: rgba(249,115,22,.15); color: var(--warn); }
+  .todo-empty { text-align: center; color: var(--accent3); font-size: 13px; padding: 16px 0; }
+
+  /* RECORD PARTS PREVIEW */
+  .rec-parts-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+  .rec-parts-box .rp-title { font-size: 12px; color: var(--text3); margin-bottom: 8px; letter-spacing: .5px; }
+  .rec-part-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .rec-part-row:last-child { border-bottom: none; }
+  .rec-part-name { color: var(--text2); }
+  .rec-part-status { font-weight: 600; font-size: 12px; }
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="loginScreen">
-  <div class="login-logo">⚡ GEN</div>
-  <div class="login-sub">發電機管理系統</div>
+  <div class="login-logo">⚡ 盈鑫</div>
+  <div class="login-sub">盈鑫發電機管理系統</div>
   <div class="login-card">
     <h2>LOGIN</h2>
     <div class="field">
@@ -825,16 +939,27 @@
 <!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-title">⚡ GEN</div>
+    <div class="topbar-title">⚡ 盈鑫</div>
     <div class="topbar-right">
       <div class="sync-dot" id="syncDot" title="同步狀態" onclick="syncNow()"></div>
       <div class="topbar-user" id="userBadge" onclick="showTab('settings')">載入中</div>
     </div>
   </div>
 
+  <div id="offlineBanner">⚠ 離線模式 — 資料已存在裝置，上線後自動同步</div>
+
   <div class="content">
     <!-- DASHBOARD -->
     <div class="tab active" id="tab-dashboard">
+      <!-- TODO LIST -->
+      <div class="todo-section" id="todoSection">
+        <div class="todo-header" onclick="toggleTodo()">
+          <h3>📋 本週待辦 <span class="todo-count" id="todoCount">0</span></h3>
+          <span class="todo-toggle" id="todoToggle">▲ 收起</span>
+        </div>
+        <div class="todo-list" id="todoList"></div>
+      </div>
+
       <div class="dash-header">
         <h2>設備總覽</h2>
         <span class="badge badge-warn" id="warnBadge">載入中</span>
@@ -883,6 +1008,11 @@
         </div>
         <div id="recLastInfo" class="info-box" style="display:none">
           上次記錄：<span id="recLastDate">-</span>　累積時數：<span id="recLastHours">-</span> hr
+        </div>
+        <!-- PARTS STATUS PREVIEW -->
+        <div class="rec-parts-box" id="recPartsBox" style="display:none">
+          <div class="rp-title">保養零件狀態</div>
+          <div id="recPartsList"></div>
         </div>
         <div class="form-row">
           <label>當下儀表板累積時數 (hr) *</label>
@@ -1307,6 +1437,7 @@ function renderDashboard() {
   const total = warn + due;
   document.getElementById('warnBadge').textContent = total > 0 ? `${total} 台需注意` : '全部正常';
   document.getElementById('warnBadge').className = 'badge ' + (total > 0 ? 'badge-warn' : 'badge-ok');
+  renderTodo();
 
   const grid = document.getElementById('genGrid');
   grid.innerHTML = '';
@@ -1380,7 +1511,11 @@ document.getElementById('recDate').value = new Date().toISOString().slice(0,10);
 
 function onGenSelect() {
   const genId = document.getElementById('recGen').value;
-  if (!genId) { document.getElementById('recLastInfo').style.display='none'; return; }
+  if (!genId) {
+    document.getElementById('recLastInfo').style.display='none';
+    document.getElementById('recPartsBox').style.display='none';
+    return;
+  }
   const recs = DB.records.filter(r=>r.genId===genId).sort((a,b)=>b.date.localeCompare(a.date));
   if (recs.length > 0) {
     const last = recs[0];
@@ -1390,7 +1525,7 @@ function onGenSelect() {
   } else {
     document.getElementById('recLastInfo').style.display = 'none';
   }
-  document.getElementById('recCalcInfo').style.display = 'none';
+  renderRecPartsList(genId);
 }
 
 document.getElementById('recHours').addEventListener('input', function() {
@@ -1930,7 +2065,134 @@ function mergeDB(local, remote) {
   return merged;
 }
 
-window.addEventListener('beforeunload', () => { save(); });
+// ── TODO LIST ─────────────────────────────────────────
+let todoOpen = true;
+function toggleTodo() {
+  todoOpen = !todoOpen;
+  document.getElementById('todoList').style.display = todoOpen ? '' : 'none';
+  document.getElementById('todoToggle').textContent = todoOpen ? '▲ 收起' : '▼ 展開';
+}
+
+function renderTodo() {
+  const items = [];
+  Object.values(DB.generators).forEach(gen => {
+    const recs = DB.records.filter(r=>r.genId===gen.id).sort((a,b)=>b.date.localeCompare(a.date));
+    const last = recs[0];
+    if (!last) return;
+    const curH = last.hours;
+    const dueParts = [];
+    let worstRemain = Infinity;
+    PARTS.forEach(p => {
+      const lastH = gen.lastService[p.key];
+      if (lastH === null || lastH === undefined) return;
+      const interval = gen[p.intKey] || 500;
+      const remain = interval - (curH - lastH);
+      if (remain <= 100) {
+        dueParts.push({name: p.name, remain});
+        if (remain < worstRemain) worstRemain = remain;
+      }
+    });
+    if (dueParts.length > 0) {
+      items.push({gen, dueParts, worstRemain});
+    }
+  });
+
+  // Sort: overdue first, then by worst remain
+  items.sort((a,b) => a.worstRemain - b.worstRemain);
+
+  document.getElementById('todoCount').textContent = items.length;
+  const el = document.getElementById('todoList');
+
+  if (items.length === 0) {
+    el.innerHTML = '<div class="todo-empty">✓ 本週無待辦保養事項</div>';
+    return;
+  }
+
+  el.innerHTML = items.map((item, idx) => {
+    const rank = idx < 3 ? idx + 1 : '•';
+    const pClass = idx === 0 ? 'p1' : idx === 1 ? 'p2' : 'p3';
+    const isOver = item.worstRemain <= 0;
+    const badgeClass = isOver ? 'danger' : 'warn';
+    const badgeText = isOver
+      ? `超過 ${Math.abs(Math.round(item.worstRemain))} hr`
+      : `剩 ${Math.round(item.worstRemain)} hr`;
+    const partsText = item.dueParts.map(p=>p.name).join('、');
+    return `
+      <div class="todo-item" onclick="goToMaint('${item.gen.id}')">
+        <div class="todo-priority ${pClass}">${rank}</div>
+        <div class="todo-info">
+          <div class="todo-gen">${item.gen.id}</div>
+          <div class="todo-parts">需換：${partsText}</div>
+          ${item.gen.location ? `<div class="todo-loc">📍 ${item.gen.location}</div>` : ''}
+        </div>
+        <div class="todo-badge ${badgeClass}">${badgeText}</div>
+      </div>`;
+  }).join('');
+}
+
+function goToMaint(genId) {
+  showTab('maint');
+  document.getElementById('maintGen').value = genId;
+  renderMaintenance();
+}
+
+// ── OFFLINE MODE ──────────────────────────────────────
+let isOffline = !navigator.onLine;
+function updateOfflineBanner() {
+  isOffline = !navigator.onLine;
+  document.getElementById('offlineBanner').classList.toggle('show', isOffline);
+}
+window.addEventListener('online', () => { updateOfflineBanner(); syncNow(); });
+window.addEventListener('offline', updateOfflineBanner);
+
+// Queue offline records
+let offlineQueue = JSON.parse(localStorage.getItem('offlineQueue') || '[]');
+function saveOfflineQueue() { localStorage.setItem('offlineQueue', JSON.stringify(offlineQueue)); }
+async function flushOfflineQueue() {
+  if (offlineQueue.length === 0) return;
+  const url = localStorage.getItem('workerUrl');
+  if (!url || isOffline) return;
+  // merge queued records into DB
+  offlineQueue.forEach(rec => {
+    if (!DB.records.find(r=>r.id===rec.id)) DB.records.push(rec);
+  });
+  offlineQueue = [];
+  saveOfflineQueue();
+  save();
+  await syncNow();
+}
+
+// ── RECORD PARTS PREVIEW ──────────────────────────────
+function renderRecPartsList(genId, curH) {
+  const gen = DB.generators[genId];
+  if (!gen) return;
+  const box = document.getElementById('recPartsBox');
+  const list = document.getElementById('recPartsList');
+  const recs = DB.records.filter(r=>r.genId===genId).sort((a,b)=>b.date.localeCompare(a.date));
+  const lastRec = recs[0];
+  const h = curH !== undefined ? curH : (lastRec ? lastRec.hours : 0);
+
+  let html = '';
+  PARTS.forEach(p => {
+    const lastH = gen.lastService[p.key];
+    const spec = gen[p.specKey] || '';
+    let statusText = '未記錄', color = 'var(--text3)';
+    if (lastH !== null && lastH !== undefined) {
+      const interval = gen[p.intKey] || 500;
+      const remain = interval - (h - lastH);
+      if (remain <= 0) { statusText = `⚠ 超過 ${Math.abs(Math.round(remain))} hr`; color = 'var(--danger)'; }
+      else if (remain <= 100) { statusText = `⚡ 剩 ${Math.round(remain)} hr`; color = 'var(--warn)'; }
+      else { statusText = `✓ 剩 ${Math.round(remain)} hr`; color = 'var(--accent3)'; }
+    }
+    html += `<div class="rec-part-row">
+      <span class="rec-part-name">${p.name}${spec?' ('+spec+')':''}</span>
+      <span class="rec-part-status" style="color:${color}">${statusText}</span>
+    </div>`;
+  });
+  list.innerHTML = html;
+  box.style.display = '';
+}
+
 
 // ── MODAL ─────────────────────────────────────────────
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -1950,6 +2212,8 @@ function toast(msg) {
 // ── INIT ──────────────────────────────────────────────
 load();
 document.getElementById('workerUrlDisplay').textContent = localStorage.getItem('workerUrl') || '未設定';
+updateOfflineBanner();
+if (navigator.onLine) flushOfflineQueue();
 </script>
 </body>
 </html>
